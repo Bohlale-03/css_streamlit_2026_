@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Feb  3 10:52:00 2026
-
-@author: 202158511
 """
 
 import streamlit as st
@@ -127,5 +124,6 @@ elif page == "Summary Insights":
 # ----------------------------
 st.markdown("---")
 st.caption("Built with Streamlit • Public dataset: Palmer Penguins")
+
 
 

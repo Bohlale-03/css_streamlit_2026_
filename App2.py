@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # ----------------------------
 # Page configuration
@@ -8,7 +7,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Mini Data Dashboard", layout="wide")
 
 st.title("📊 Mini Streamlit Dashboard (Public Dataset)")
-st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** with **static Matplotlib plots**.")
+st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** without plots. It focuses on **data overview, filtering, and summary tables**.")
 
 # ----------------------------
 # Load public dataset (Penguins)
@@ -26,7 +25,7 @@ df = load_data()
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
-    ["Overview", "Scatter Analysis", "Distribution Analysis", "Summary Insights"]
+    ["Dataset Overview", "Column Description", "Grouped Summary", "Key Insights"]
 )
 
 st.sidebar.header("Global Filters")
@@ -49,76 +48,70 @@ filtered_df = df[
 ]
 
 # ----------------------------
-# PAGE 1: Overview
+# PAGE 1: Dataset Overview
 # ----------------------------
-if page == "Overview":
+if page == "Dataset Overview":
     st.header("📌 Dataset Overview")
-    st.dataframe(filtered_df)
+    st.write("This page shows the raw dataset after applying filters.")
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("Total Penguins", len(filtered_df))
-    col2.metric("Avg Bill Length (mm)", round(filtered_df["bill_length_mm"].mean(), 2))
-    col3.metric("Avg Flipper Length (mm)", round(filtered_df["flipper_length_mm"].mean(), 2))
+    col1.metric("Total Records", len(filtered_df))
+    col2.metric("Unique Species", filtered_df["species"].nunique())
+    col3.metric("Islands Covered", filtered_df["island"].nunique())
+
+    st.dataframe(filtered_df)
 
 # ----------------------------
-# PAGE 2: Scatter Analysis
+# PAGE 2: Column Description
 # ----------------------------
-elif page == "Scatter Analysis":
-    st.header("📈 Scatter Plot Analysis")
+elif page == "Column Description":
+    st.header("📄 Column Description")
 
-    fig, ax = plt.subplots()
-    for sp in filtered_df["species"].dropna().unique():
-        subset = filtered_df[filtered_df["species"] == sp]
-        ax.scatter(subset["bill_length_mm"], subset["flipper_length_mm"], label=sp)
+    description = pd.DataFrame({
+        "Column": filtered_df.columns,
+        "Description": [
+            "Penguin species",
+            "Island where penguin was observed",
+            "Bill length in millimeters",
+            "Bill depth in millimeters",
+            "Flipper length in millimeters",
+            "Body mass in grams",
+            "Sex of the penguin"
+        ]
+    })
 
-    ax.set_xlabel("Bill Length (mm)")
-    ax.set_ylabel("Flipper Length (mm)")
-    ax.set_title("Bill Length vs Flipper Length")
-    ax.legend()
-
-    st.pyplot(fig)
-
-    st.markdown("**Insight:** Different species form distinct clusters.")
-
-# ----------------------------
-# PAGE 3: Distribution Analysis
-# ----------------------------
-elif page == "Distribution Analysis":
-    st.header("📊 Distribution Analysis")
-
-    fig, ax = plt.subplots()
-    for sp in filtered_df["species"].dropna().unique():
-        subset = filtered_df[filtered_df["species"] == sp]
-        ax.hist(subset["body_mass_g"].dropna(), alpha=0.6, label=sp)
-
-    ax.set_xlabel("Body Mass (g)")
-    ax.set_ylabel("Frequency")
-    ax.set_title("Body Mass Distribution by Species")
-    ax.legend()
-
-    st.pyplot(fig)
+    st.table(description)
 
 # ----------------------------
-# PAGE 4: Summary Insights
+# PAGE 3: Grouped Summary
 # ----------------------------
-elif page == "Summary Insights":
-    st.header("🧠 Summary Insights")
+elif page == "Grouped Summary":
+    st.header("📊 Grouped Summary Statistics")
 
     summary_df = filtered_df.groupby("species", as_index=False).agg(
-        avg_body_mass=("body_mass_g", "mean"),
-        avg_bill_length=("bill_length_mm", "mean"),
-        avg_flipper_length=("flipper_length_mm", "mean")
+        count=("species", "count"),
+        avg_body_mass_g=("body_mass_g", "mean"),
+        avg_bill_length_mm=("bill_length_mm", "mean"),
+        avg_flipper_length_mm=("flipper_length_mm", "mean")
     )
 
-    fig, ax = plt.subplots()
-    ax.bar(summary_df["species"], summary_df["avg_body_mass"])
-    ax.set_xlabel("Species")
-    ax.set_ylabel("Average Body Mass (g)")
-    ax.set_title("Average Body Mass by Species")
-
-    st.pyplot(fig)
-
+    st.write("Summary statistics grouped by species:")
     st.dataframe(summary_df)
+
+# ----------------------------
+# PAGE 4: Key Insights
+# ----------------------------
+elif page == "Key Insights":
+    st.header("🧠 Key Insights")
+
+    st.markdown(
+        """
+        - The dataset contains observations of penguins from multiple islands.
+        - Species show noticeable differences in body mass and flipper length.
+        - Filtering allows focused inspection of specific species or islands.
+        - This structure is useful for **exploratory data analysis before visualization or modeling**.
+        """
+    )
 
 # ----------------------------
 # Footer

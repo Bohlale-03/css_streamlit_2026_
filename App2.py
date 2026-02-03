@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
 
 # ----------------------------
 # Page configuration
@@ -12,7 +8,7 @@ import plotly.express as px
 st.set_page_config(page_title="Mini Data Dashboard", layout="wide")
 
 st.title("📊 Mini Streamlit Dashboard (Public Dataset)")
-st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** with different plots.")
+st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** with **static Matplotlib plots**.")
 
 # ----------------------------
 # Load public dataset (Penguins)
@@ -70,17 +66,19 @@ if page == "Overview":
 elif page == "Scatter Analysis":
     st.header("📈 Scatter Plot Analysis")
 
-    fig1 = px.scatter(
-        filtered_df,
-        x="bill_length_mm",
-        y="flipper_length_mm",
-        color="species",
-        size="body_mass_g",
-        title="Bill Length vs Flipper Length"
-    )
-    st.plotly_chart(fig1, use_container_width=True)
+    fig, ax = plt.subplots()
+    for sp in filtered_df["species"].dropna().unique():
+        subset = filtered_df[filtered_df["species"] == sp]
+        ax.scatter(subset["bill_length_mm"], subset["flipper_length_mm"], label=sp)
 
-    st.markdown("**Insight:** Different species show clear clustering patterns.")
+    ax.set_xlabel("Bill Length (mm)")
+    ax.set_ylabel("Flipper Length (mm)")
+    ax.set_title("Bill Length vs Flipper Length")
+    ax.legend()
+
+    st.pyplot(fig)
+
+    st.markdown("**Insight:** Different species form distinct clusters.")
 
 # ----------------------------
 # PAGE 3: Distribution Analysis
@@ -88,14 +86,17 @@ elif page == "Scatter Analysis":
 elif page == "Distribution Analysis":
     st.header("📊 Distribution Analysis")
 
-    fig2 = px.histogram(
-        filtered_df,
-        x="body_mass_g",
-        color="species",
-        barmode="overlay",
-        title="Body Mass Distribution by Species"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
+    fig, ax = plt.subplots()
+    for sp in filtered_df["species"].dropna().unique():
+        subset = filtered_df[filtered_df["species"] == sp]
+        ax.hist(subset["body_mass_g"].dropna(), alpha=0.6, label=sp)
+
+    ax.set_xlabel("Body Mass (g)")
+    ax.set_ylabel("Frequency")
+    ax.set_title("Body Mass Distribution by Species")
+    ax.legend()
+
+    st.pyplot(fig)
 
 # ----------------------------
 # PAGE 4: Summary Insights
@@ -109,13 +110,13 @@ elif page == "Summary Insights":
         avg_flipper_length=("flipper_length_mm", "mean")
     )
 
-    fig3 = px.bar(
-        summary_df,
-        x="species",
-        y="avg_body_mass",
-        title="Average Body Mass by Species"
-    )
-    st.plotly_chart(fig3, use_container_width=True)
+    fig, ax = plt.subplots()
+    ax.bar(summary_df["species"], summary_df["avg_body_mass"])
+    ax.set_xlabel("Species")
+    ax.set_ylabel("Average Body Mass (g)")
+    ax.set_title("Average Body Mass by Species")
+
+    st.pyplot(fig)
 
     st.dataframe(summary_df)
 
@@ -124,6 +125,3 @@ elif page == "Summary Insights":
 # ----------------------------
 st.markdown("---")
 st.caption("Built with Streamlit • Public dataset: Palmer Penguins")
-
-
-

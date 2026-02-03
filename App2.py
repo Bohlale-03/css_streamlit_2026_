@@ -113,9 +113,6 @@ elif page == "Key Insights":
         """
     )
 
-# ----------------------------
-# Footer
-# ----------------------------
-st.markdown("---")
-st.caption("Built with Streamlit • Public dataset: Palmer Penguins")
+
+
 

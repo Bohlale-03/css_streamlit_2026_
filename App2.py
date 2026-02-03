@@ -7,7 +7,7 @@ import pandas as pd
 st.set_page_config(page_title="Mini Data Dashboard", layout="wide")
 
 st.title("Mini Streamlit Dashboard")
-st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** without plots. It focuses on **data overview, filtering, and summary tables**.")
+st.markdown("This dashboard uses a public dataset and demonstrates multi-page navigation without plots. It focuses on data overview, filtering, and summary tables.")
 
 # ----------------------------
 # Load public dataset (Penguins)
@@ -109,9 +109,10 @@ elif page == "Key Insights":
         - The dataset contains observations of penguins from multiple islands.
         - Species show noticeable differences in body mass and flipper length.
         - Filtering allows focused inspection of specific species or islands.
-        - This structure is useful for **exploratory data analysis before visualization or modeling**.
+        - This structure is useful for exploratory data analysis before visualization or modeling.
         """
     )
+
 
 
 

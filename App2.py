@@ -6,7 +6,7 @@ import pandas as pd
 # ----------------------------
 st.set_page_config(page_title="Mini Data Dashboard", layout="wide")
 
-st.title("📊 Mini Streamlit Dashboard (Public Dataset)")
+st.title("Mini Streamlit Dashboard")
 st.markdown("This dashboard uses a **public dataset** and demonstrates **multi-page navigation** without plots. It focuses on **data overview, filtering, and summary tables**.")
 
 # ----------------------------
@@ -65,7 +65,7 @@ if page == "Dataset Overview":
 # PAGE 2: Column Description
 # ----------------------------
 elif page == "Column Description":
-    st.header("📄 Column Description")
+    st.header(" Column Description")
 
     description = pd.DataFrame({
         "Column": filtered_df.columns,
@@ -86,7 +86,7 @@ elif page == "Column Description":
 # PAGE 3: Grouped Summary
 # ----------------------------
 elif page == "Grouped Summary":
-    st.header("📊 Grouped Summary Statistics")
+    st.header("Grouped Summary Statistics")
 
     summary_df = filtered_df.groupby("species", as_index=False).agg(
         count=("species", "count"),
@@ -102,7 +102,7 @@ elif page == "Grouped Summary":
 # PAGE 4: Key Insights
 # ----------------------------
 elif page == "Key Insights":
-    st.header("🧠 Key Insights")
+    st.header(" Key Insights")
 
     st.markdown(
         """
@@ -118,3 +118,4 @@ elif page == "Key Insights":
 # ----------------------------
 st.markdown("---")
 st.caption("Built with Streamlit • Public dataset: Palmer Penguins")
+

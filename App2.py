@@ -51,7 +51,7 @@ filtered_df = df[
 # PAGE 1: Dataset Overview
 # ----------------------------
 if page == "Dataset Overview":
-    st.header("📌 Dataset Overview")
+    st.header("Dataset Overview")
     st.write("This page shows the raw dataset after applying filters.")
 
     col1, col2, col3 = st.columns(3)
@@ -112,6 +112,7 @@ elif page == "Key Insights":
         - This structure is useful for **exploratory data analysis before visualization or modeling**.
         """
     )
+
 
 
 
